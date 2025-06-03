@@ -1,0 +1,45 @@
+﻿species,temp,rate
+Hyalomma dromedarii,21,0.008888889
+Hyalomma dromedarii,25,0.011312217
+Hyalomma dromedarii,29,0.019157088
+Hyalomma dromedarii,34,0.023529412
+Haemaphysalis longicornis,20,0.178
+Haemaphysalis longicornis,25,0.372
+Haemaphysalis longicornis,30,0.48
+Haemaphysalis longicornis,32,0.497
+Haemaphysalis longicornis,35,0.451
+Ixodes holocyclus,17.5,0.0523
+Ixodes holocyclus,25,0.143
+Ixodes holocyclus,30,0.176
+Rhipicephalus sanguineus,25,0.398
+Rhipicephalus sanguineus,30,0.546
+Rhipicephalus sanguineus,32,0.683
+Rhipicephalus sanguineus,38,0.622
+Ixodes scapularis,12,0.008194706
+Ixodes scapularis,16,0.017202821
+Ixodes scapularis,20,0.02037905
+Ixodes scapularis,24,0.040650407
+Ixodes scapularis,28,0.054054054
+Haemaphysalis leporispalustris,35.6,0.018875047
+Haemaphysalis leporispalustris,29.7,0.016409583
+Haemaphysalis leporispalustris,25.2,0.01442169
+Haemaphysalis leporispalustris,19.9,0.007243752
+Haemaphysalis leporispalustris,14.7,0.00366059
+Haemaphysalis longicornis (field),3.87,0.009416196
+Haemaphysalis longicornis (field),11.32,0.014409222
+Haemaphysalis longicornis (field),16.35,0.023529412
+Haemaphysalis longicornis (field),19,0.033222591
+Haemaphysalis longicornis (field),22.7,0.037037037
+Amblyomma americanum,28,0.043478261
+Amblyomma americanum,30,0.058823529
+Amblyomma americanum,33,0.04
+Amblyomma americanum,28,0.031746032
+Amblyomma americanum,30,0.039215686
+Amblyomma americanum,33,0.034482759
+Amblyomma americanum,28,0.02173913
+Amblyomma americanum,30,0.025641026
+Amblyomma americanum,33,0.025
+Hyalomma schulzei,21,0.00557041
+Hyalomma schulzei,25,0.006846033
+Hyalomma schulzei,28,0.012786089
+Hyalomma schulzei,34,0.017105713
