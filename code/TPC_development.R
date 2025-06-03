@@ -232,13 +232,9 @@ tibble(diff = diff_boot) %>%
   theme_minimal()
 
 
-
-
-# 查看 bootstrap Tpk 分布
 hist(boot1, main = "Field", xlab = "Tpk", col = "blue", breaks = 20)
 hist(boot2, main = "Lab", xlab = "Tpk", col = "red", breaks = 20)
 
-# 或者可视化对比
 library(ggplot2)
 bind_rows(
   tibble(Tpk = boot1, source = "Field"),
