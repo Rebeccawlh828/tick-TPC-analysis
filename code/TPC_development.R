@@ -60,7 +60,7 @@ Tpk_df <- tibble(
 print(predictions_df)
 print(Tpk_df) 
 
-# Plot
+
 # Plot
 ggplot(predictions_df, aes(x = temp, y = fitted)) +
   facet_wrap(~species, scales = 'free_y') +
@@ -175,10 +175,10 @@ Pmax_df <- predictions_df %>%
   group_by(species) %>%
   summarise(Pmax = max(fitted, na.rm = TRUE))
 
-# Step 2: Merge with Tpk
+#Merge with Tpk
 Tpk_Pmax_df <- left_join(Tpk_df, Pmax_df, by = "species")
 
-# Step 3: Plot Pmax vs Tpk
+#Pmax vs Tpk
 library(ggplot2)
 ggplot(Tpk_Pmax_df, aes(x = Tpk, y = Pmax)) +
   geom_point(size = 3, color = "blue") +
@@ -190,11 +190,11 @@ ggplot(Tpk_Pmax_df, aes(x = Tpk, y = Pmax)) +
   ) +
   theme_minimal(base_size = 14)
 
-# Step 4: Run linear regression
+#linear regression
 lm_model <- lm(Pmax ~ Tpk, data = Tpk_Pmax_df)
 summary(lm_model)
 
-# Step 5 (Optional): Non-parametric correlation test
+#Non-parametric correlation test
 cor_test <- cor.test(Tpk_Pmax_df$Tpk, Tpk_Pmax_df$Pmax, method = "spearman")
 print(cor_test)
 
