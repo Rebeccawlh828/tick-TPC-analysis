@@ -2,7 +2,7 @@ library(tidyverse)
 library(boot)
 library(broom)
 
-# Load fecundity data
+#fecundity data
 dv <- read_csv("/Users/rebecca/Downloads/fec traitdata.csv") %>%
   mutate(temp = as.numeric(temp), rate = as.numeric(rate)) %>%
   drop_na(temp, rate) %>%
@@ -41,22 +41,6 @@ FitModel <- function(ID) {
 results <- map(unique(dv$curve_ID), ~ FitModel(.x)) %>% compact()
 predictions_df <- map_dfr(results, "pred_df")
 
-predictions_df <- predictions_df %>%
-  mutate(
-    species_italics = case_when(
-      species == "Dermacentor andersoni" ~ "italic(Dermacentor~andersoni)",
-      species == "Haemaphysalis leporispalustris" ~ "italic(Haemaphysalis~leporispalustris)",
-      species == "Haemaphysalis longicornis (field)" ~ "italic(Haemaphysalis~longicornis~'(field)')",
-      species == "Haemaphysalis spinulosa" ~ "italic(Haemaphysalis~spinulosa)",
-      species == "Hyalomma aegyptium" ~ "italic(Hyalomma~aegyptium)",
-      species == "Rhipicephalus annulatus" ~ "italic(Rhipicephalus~annulatus)",
-      species == "Rhipicephalus simus" ~ "italic(Rhipicephalus~simus)",
-      TRUE ~ paste0("italic(", gsub(" ", "~", species), ")")
-    )
-  )
-
-
-
 Tpk_df <- tibble(
   species = map_chr(results, ~ .x$pred_df$species[1]),
   Tpk = map_dbl(results, "Tpk")
@@ -66,7 +50,7 @@ print(predictions_df)
 print(Tpk_df)
 
 ggplot(predictions_df, aes(x = temp, y = fitted)) +
-  facet_wrap(~ species_italics, labeller = label_parsed, scales = "free_y") +
+  facet_wrap(~species, scales = 'free_y') +
   geom_ribbon(aes(ymin = lower, ymax = upper), fill = "grey70", alpha = 0.3) +
   geom_line(color = "orange") +
   labs(
@@ -151,7 +135,6 @@ Tpk_boot_df <- dv %>%
   })
 
 print(Tpk_boot_df)
-Tpk_boot_df_fec <- Tpk_boot_df
 
 
 #HOTTER IS BETTER
@@ -159,23 +142,18 @@ Pmax_df <- predictions_df %>%
   group_by(species) %>%
   summarise(Pmax = max(fitted, na.rm = TRUE))
 
-Tpk_df_fec <- tibble(
-  species = map_chr(results, ~ .x$pred_df$species[1]),
-  Tpk = map_dbl(results, "Tpk")
-)
-
-Pmax_df_fec <- predictions_df %>%
+Tpk_df_fec <- results_df %>%
   group_by(species) %>%
-  summarise(Pmax = max(fitted, na.rm = TRUE))
+  summarise(Tpk = temp[which.max(fitted)])
 
 
-# Step 2: Merge with Tpk
+# Merge with Tpk
 Tpk_Pmax_df_fec_fec <- left_join(Tpk_df_fec, Pmax_df_fec, by = "species")
 Tpk_Pmax_df_fec <- left_join(Tpk_df, Pmax_df, by = "species")
 
 print(Tpk_Pmax_df_fec)
 
-# Step 3: Plot Pmax vs Tpk
+#Plot Pmax vs Tpk
 library(ggplot2)
 ggplot(Tpk_Pmax_df_fec, aes(x = Tpk, y = Pmax)) +
   geom_point(size = 3, color = "#D95F02") +
@@ -187,20 +165,15 @@ ggplot(Tpk_Pmax_df_fec, aes(x = Tpk, y = Pmax)) +
   ) +
   theme_minimal(base_size = 14)
 
-# Step 4: Run linear regression
+#linear regression
 lm_model <- lm(Pmax ~ Tpk, data = Tpk_Pmax_df_fec)
 summary(lm_model)
 
-# Step 5 (Optional): Non-parametric correlation test
+#Non-parametric correlation test
 cor_test <- cor.test(Tpk_Pmax_df_fec$Tpk, Tpk_Pmax_df_fec$Pmax, method = "spearman")
 print(cor_test)
 
 
-### ————————————————————————————
-### STEP 6: Bootstrap Slope CI for "Hotter-is-better"
-### ————————————————————————————
-
-# Step 6.1: Define bootstrap slope CI function
 bootstrap_slope_ci <- function(df, R = 1000) {
   boot_model <- boot(data = df, statistic = function(data, idx) {
     model <- lm(Pmax ~ Tpk, data = data[idx, ])
@@ -215,7 +188,7 @@ bootstrap_slope_ci <- function(df, R = 1000) {
   )
   print(slope_df)
   
-  # Plot slope distribution
+  #slope distribution
   ggplot(data.frame(slope = boot_model$t), aes(x = slope)) +
     geom_histogram(bins = 30, fill = "#E69F00", color = "white", alpha = 0.75) +
     geom_vline(xintercept = 0, linetype = "dashed", color = "red") +
@@ -228,10 +201,4 @@ bootstrap_slope_ci <- function(df, R = 1000) {
     theme_minimal(base_size = 14)
 }
 
-# Step 6.2: Run it!
 bootstrap_slope_ci(Tpk_Pmax_df_fec)
-
-
-
-Tpk_boot_df_fec <- Tpk_boot_df
-
