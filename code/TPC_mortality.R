@@ -148,13 +148,13 @@ Tpk_df_mor <- results_df %>%
   summarise(Tpk = temp[which.max(fitted)])
 
 
-# Step 2: Merge with Tpk
+#Merge with Tpk
 Tpk_Pmax_df_fec_fec <- left_join(Tpk_df_fec, Pmax_df_fec, by = "species")
 Tpk_Pmax_df_mor <- left_join(Tpk_df, Pmax_df, by = "species")
 
 print(Tpk_Pmax_df_mor)
 
-# Step 3: Plot Pmax vs Tpk
+#Plot Pmax vs Tpk
 library(ggplot2)
 ggplot(Tpk_Pmax_df_mor, aes(x = Tpk, y = Pmax)) +
   geom_point(size = 3, color = "red") +
@@ -166,20 +166,16 @@ ggplot(Tpk_Pmax_df_mor, aes(x = Tpk, y = Pmax)) +
   ) +
   theme_minimal(base_size = 14)
 
-# Step 4: Run linear regression
+#linear regression
 lm_model <- lm(Pmax ~ Tpk, data = Tpk_Pmax_df_mor)
 summary(lm_model)
 
-# Step 5 (Optional): Non-parametric correlation test
+#Non-parametric correlation test
 cor_test <- cor.test(Tpk_Pmax_df_mor$Tpk, Tpk_Pmax_df_mor$Pmax, method = "spearman")
 print(cor_test)
 
 
-### ————————————————————————————
-### STEP 6: Bootstrap Slope CI for "Hotter-is-better"
-### ————————————————————————————
-
-# Step 6.1: Define bootstrap slope CI function
+# bootstrap slope CI function
 bootstrap_slope_ci <- function(df, R = 1000) {
   boot_model <- boot(data = df, statistic = function(data, idx) {
     model <- lm(Pmax ~ Tpk, data = data[idx, ])
@@ -194,7 +190,7 @@ bootstrap_slope_ci <- function(df, R = 1000) {
   )
   print(slope_df)
   
-  # Plot slope distribution
+  #slope distribution
   ggplot(data.frame(slope = boot_model$t), aes(x = slope)) +
     geom_histogram(bins = 30, fill = "#E69F00", color = "white", alpha = 0.75) +
     geom_vline(xintercept = 0, linetype = "dashed", color = "red") +
